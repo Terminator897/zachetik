@@ -1,0 +1,264 @@
+Информатика (задачи)
+
+1.	Разложение матрицы 
+
+matrix = []
+
+for i in range(3):
+
+    r = list(map(int, input().split()))
+
+    matrix.append(r)
+
+    
+
+lower = [[0] * 3 for i in range(3)]
+
+upper = [[0] * 3 for i in range(3)]
+
+for i in range(3):
+
+    upper[i][i] = 1
+
+lower[0][0] = matrix[0][0]
+
+for i in range(1, 3):
+
+    lower[i][0] = matrix[i][0]
+
+for j in range(1, 3):
+
+    upper[0][j] = matrix[0][j] / lower[0][0]
+
+lower[1][1] = matrix[1][1] - lower[1][0] * upper[0][1]
+
+lower[2][1] = matrix[2][1] - lower[2][0] * upper[0][1]
+
+upper[1][2] = (matrix[1][2] - lower[1][0] * upper[0][2]) / lower[1][1]
+
+upper[2][2] = (matrix[2][2] - lower[2][0] * upper[0][2] - lower[2][1] * upper[1][2])
+
+
+
+print(lower)
+
+print(upper)
+
+
+
+2.	Метод Холецкого 
+
+import math
+
+size = int(input("Введите размерность квадратной матрицы: "))
+
+matrix = []
+
+for i in range(size):
+
+    r = list(map(float, input(f"Введите элементы {i + 1}-й строки через пробел: ").split()))
+
+    matrix.append(r)
+
+lower = [[0] * size for i in range(size)]
+
+
+
+def cholesky(matrix):
+
+    for i in range(size):
+
+        sum = 0        
+
+        if i > 0:
+
+            for j in range(i):
+
+                sum += lower[i][j] ** 2                
+
+        diagonal = math.sqrt(matrix[i][i] - sum)
+
+        lower[i][i] = diagonal        
+
+        for k in range(i + 1, size):
+
+            S = 0            
+
+            if i > 0:
+
+                for l in range(i):
+
+                    S += lower[i][l] * lower[k][l]                    
+
+            off_element = (matrix[k][i] - S) / diagonal
+
+            lower[k][i] = off_element    
+
+    return lower
+
+
+
+result = cholesky(matrix)
+
+print(result)
+
+
+
+
+
+3.	Игра
+
+print('Вы играете за четные числа. Ваш ход первый.')
+
+board = [
+
+    [[1], [2], [3], [4]],
+
+    [[5], [6], [7], [8]],
+
+    [[9], [10], [11], [12]],
+
+    [[13], [14], [15], [16]]
+
+]
+
+used = [1]
+
+turn = 1
+
+
+
+while True:
+
+    print('Введите номер строки:')
+
+    r = int(input()) - 1
+
+    if not (0 <= r <= 3):
+
+        print('Нет такой строки')
+
+        continue
+
+    print('Введите номер столбца:')
+
+    c = int(input()) - 1
+
+    if not (0 <= c <= 3):
+
+        print('Нет такого столбца')
+
+        continue
+
+    print('Введите число:')
+
+    number = int(input())
+
+    if not (1 <= number <= 16):
+
+        print('Число должно быть от 1 до 16')
+
+        continue
+
+    if number in used:
+
+        print('Такое число уже использовано')
+
+        continue
+
+    if len(board[r][c]) == 0:
+
+        board[r][c].append(number)
+
+    else:
+
+        print('Клетка занята')
+
+        continue
+
+    used.append(number)
+
+
+
+    for line in board:
+
+        for cell in line:
+
+            print(cell, end=' ')
+
+        print()
+
+    if turn == 1:
+
+        print('Мой ход')
+
+        turn = 2
+
+    else:
+
+        print('Ваш ход')
+
+        turn = 1
+
+    if len(used) == 16:
+
+        print('Победа второго игрока')
+
+        break
+
+
+
+4.	Квадратный трёхчлен 
+
+print("Введите коэффициенты квадратного трехчлена:")
+
+a = float(input("a = "))
+
+b = float(input("b = "))
+
+c = float(input("c = "))
+
+D = b**2 - 4*a*c
+
+if D < 0:
+
+    print("Корней нет")
+
+elif D >= 0:
+
+    a1 = a
+
+    b1 = b / 2
+
+    c1 = c / 4
+
+ print('Квадратный трёхчлен с корнями, в два раза меньшими корней исходного', a1, 'x^2', '+', b1, 'x', '+', c1)
+
+
+
+5.	Проекция точки на плоскость 
+
+def project(point, plane):
+
+    A, B, C, D = plane
+
+    n = [A, B, C]
+
+    v = point
+
+    x = A*v[0] + B*v[1] + C*v[2] + D
+
+    y = A**2 + B**2 + C**2    
+
+    if abs(y) < 1e-10:
+
+        raise ValueError("Плоскость некорректно определена.")
+
+
+
+    t = -x / y    
+
+    projected = [v[0] + t*n[0], v[1] + t*n[1], v[2] + t*n[2]]    
+
+    return projected
+
