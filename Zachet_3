@@ -1,0 +1,25 @@
+import numpy as np
+from skimage import io, color
+from sklearn.cluster import KMeans
+
+# Загрузка изображения
+img = io.imread('path_to_your_image.jpg')
+
+# Преобразование изображения в формат LAB
+lab_img = color.rgb2lab(img)
+
+# Получение формы изображения
+width, height, channels = lab_img.shape
+
+# Преобразуем изображение в одномерный массив
+reshaped_lab_img = lab_img.reshape(width * height, channels)
+
+# Применение K-means для сегментации
+kmeans = KMeans(n_clusters=4).fit(reshaped_lab_img)
+labels = kmeans.labels_
+
+# Преобразуем метки обратно в форму изображения
+segmented_img = labels.reshape((width, height))
+
+# Сохраняем сегментированное изображение
+io.imsave('segmented_image.png', segmented_img)
